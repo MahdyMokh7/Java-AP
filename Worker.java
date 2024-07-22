@@ -35,12 +35,5 @@ public class Worker {
         }
     }  
 
-   
-    
 
-    public static void main(String[] args) {  
-        Worker.Time time = new Worker.Time(1);  
-        Worker worker1 = new Worker(1, 8, 1, time);  
-    
-    }  
 }
