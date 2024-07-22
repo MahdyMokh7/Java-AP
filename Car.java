@@ -14,16 +14,4 @@ public class Car {
         this.time = time;  
     }  
 
-     
-
-
-    public static void main(String[] args) {  
-        Vector<Integer> stages_Id = new Vector<>();  
-        
-        Car.Time time = new Car.Time(1); 
-
-        Car car = new Car(1, stages_Id, time); 
-
-        
-    }  
 }
