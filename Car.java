@@ -7,7 +7,7 @@ public class Car {
     private Time time;  
     private static int max_id;
  
-    public Car(Vector<Integer> stage, Time time) {  
+    public Car(int id, Vector<Integer> stage, Time time) {  
      
         this.status = status;  
         this.stage = stage;  
