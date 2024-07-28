@@ -17,7 +17,7 @@ public class Stage {
 
 
  
-    public Stage(int id , int price, Time time) {  
+    public Stage(int id , int price, Time time) {   // Constructor
         
         this.id = id;
         this.price = price;  
@@ -25,14 +25,26 @@ public class Stage {
         this.income = 0;  
     }  
 
+    public Stage(Stage other) {   // Copy Constructor
+        this.id = other.id;
+        this.price = other.price;
+        this.income = other.income;
+        this.time = other.time; // Assuming Time class has a proper copy constructor
+        this.current_cars = new ArrayList<>(other.current_cars); // Shallow copy of the ArrayList
+        this.queue_cars = new ArrayList<>(other.queue_cars); // Shallow copy of the ArrayList
+        this.done_cars = new ArrayList<>(other.done_cars); // Shallow copy of the ArrayList
+        this.workers = new ArrayList<>(other.workers); // Shallow copy of the ArrayList
+    }
+    
+
     public void add_worker(Worker worker) {  
         workers.add(worker);  
     }  
 
     public void add_car(Car car) { // for car arrival command
         for(Worker worker : workers){
-            if(worker.get_status()=="idle"){
-                assign_idle_worker_to_car_in_queue (time.getTime());
+            if(worker.is_worker_free()){
+                assign_idle_worker_to_car_in_queue (time.getTime(), true);
                 return ;
             }
         }
@@ -77,21 +89,22 @@ public class Stage {
         return 0; 
     }
 
-    public void assign_idle_worker_to_car_in_queue (int intermediate_time) {
+    public void assign_idle_worker_to_car_in_queue (int intermediate_time, boolean flag_from_add_car) {
         int end_time = 0;
         for (Car car : queue_cars){ 
             for (Worker worker : workers){
-                if(worker.get_status()=="idle"){
-                    car.update_car_status("in_service"); //in queue car array_list             
-                    worker.update_worker_status("in work");
+                if(worker.is_worker_free()){
+                    car.update_car_status(Car.IN_SERVICE); //in queue car array_list             
+                    worker.update_worker_status(Worker.IN_WORK);
                     worker.update_in_work_car_id(car.get_id());
-                   // System.out.println(intermediate_time+ " car "+ car.get_id()+": Queue "+ id +" -> Stage " + id);
+                    if (!flag_from_add_car) {
+                        System.out.println(intermediate_time+ " car "+ car.get_id()+": Queue "+ id +" -> Stage " + id);
+                    }
                     current_cars.add(car);
                     queue_cars.remove(car);  //syntax doroste? yani hamoon car ro pak mikone?
                     end_time = intermediate_time + worker.get_time_to_finish();
                     worker.assign_end_time_prediction(end_time);
-                    end_time = 0;
-                     
+
                 }
             }
         }
@@ -113,17 +126,16 @@ public class Stage {
         //تخصیص کارگرT همان انتقال از صف به مرحله.
         //انتقال از مرحله به مرحله بعد
         ArrayList<Car> temp_done_cars = new ArrayList<Car>();
-        assign_idle_worker_to_car_in_queue ( intermediate_time);
+        assign_idle_worker_to_car_in_queue ( intermediate_time, false);
         for (Worker worker : workers){
             for (Car car : current_cars){ 
-                if(worker.get_status() == "in_work"){
+                if(!worker.is_worker_free()){
                     if(intermediate_time == worker.get_end_time_prediction()){    
 
                         if(car.get_id() == worker.get_in_work_car_id()){
                             car.update_car_status("done"); 
-                            worker.update_worker_status("idle");
+                            worker.update_worker_status(Worker.IDLE);
 
-                            // add car to next stage!  ماشین هایی که تغییر وضعیت داده اند را برمیگردانیم
                             temp_done_cars.add(car);
                             new_stage_id = find_new_stage_id(car);
                             if(new_stage_id != -1){
@@ -136,7 +148,6 @@ public class Stage {
                             current_cars.remove(car);
                             car.update_max_id_index(); 
                             income = income + price;
-                            //remove stage fron vector of stages in car class for final command
                         }                        
                     }                
                 }

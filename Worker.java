@@ -1,5 +1,6 @@
 public class Worker {  
-    public static final String IDLE = "idle";
+    public static final String IDLE = "Idle";
+    public static final String IN_WORK = "In Work";
 
     private int id;  
     private String status;  
@@ -12,15 +13,22 @@ public class Worker {
   
     public Worker(int id, int time_to_finish, int stage_id, Time time) {  
         this.id = id;  
-        this.status = "idle";  
+        this.status = IDLE;  
         this.time_to_finish = time_to_finish;  
         this.stage_id = stage_id;  
         this.time = time;  
     }  
 
-    public String get_status() {  
-        return status;  
-    } 
+    // Copy constructor
+    public Worker(Worker other) {
+        this.id = other.id;
+        this.status = other.status;
+        this.time_to_finish = other.time_to_finish;
+        this.stage_id = other.stage_id;
+        this.time = new Time(other.time); // Assuming Time has a copy constructor
+        this.end_time_prediction = other.end_time_prediction;
+        this.in_work_car_id = other.in_work_car_id;
+    }
 
     public int get_time_to_finish(){
         return time_to_finish;
@@ -49,22 +57,8 @@ public class Worker {
 
     public boolean is_worker_free() {  
 
-        if(this.status == "idle"){
-
+        if(this.status == IDLE){
             return true;
-        }
-        else{
-
-            return false;
-        }
-    }  
-
-   
-    
-
-    public static void main(String[] args) {  
-        Time time = new Time();  
-        Worker worker1 = new Worker(1, 8, 1, time);  
-    
+        return false;
     }  
 }

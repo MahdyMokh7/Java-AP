@@ -1,20 +1,33 @@
 import java.util.ArrayList;
 
-public class Car {  
+public class Car { 
+    public static final String Done = "Done";
+    public static final String IN_SERVICE = "In Service";
+    public static final String IN_LINE = "In Line";
+
     private int id; 
     private String status;  
     private ArrayList<Integer> stage;  
     private Time time;  
-    private static int max_id_index;
+    private int max_id_index;
  
+    // Constructor
     public Car(int id , ArrayList<Integer> stage, Time time) {  
 
         this.id = id;
-        this.status = status;  
         this.stage = stage;  
         this.time = time;  
         max_id_index = 0;
     }  
+
+    // Copy constructor
+    public Car(Car other) {
+        this.id = other.id;
+        this.status = other.status;
+        this.stage = new ArrayList<>(other.stage); // Create a new ArrayList to copy stages
+        this.time = new Time(other.time); // Assuming Time has a copy constructor
+        this.max_id_index = other.max_id_index; // Copy the static variable
+    }
 
     public int get_id() {  
         return id;  

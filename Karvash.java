@@ -23,6 +23,27 @@ public class Karvash {
     public static final String QUIT = "done";
 
 
+    // Copy constructor
+    public Karvash(Karvash other) {
+        this.stages = new ArrayList<>(other.stages.size());
+        for (Stage stage : other.stages) {
+            this.stages.add(new Stage(stage)); // Assuming Stage has a copy constructor
+        }
+
+        this.cars = new ArrayList<>(other.cars.size());
+        for (Car car : other.cars) {
+            this.cars.add(new Car(car)); // Assuming Car has a copy constructor
+        }
+
+        this.workers = new ArrayList<>(other.workers.size());
+        for (Worker worker : other.workers) {
+            this.workers.add(new Worker(worker)); // Assuming Worker has a copy constructor
+        }
+
+        this.time = new Time(other.time); // Assuming Time has a copy constructor
+        this.last_car_id = other.last_car_id;
+    }
+
     private Car find_car(int id) {
         Car founded_car;
         boolean is_found = false;
@@ -62,7 +83,7 @@ public class Karvash {
     }
 
     private Stage find_stage(int stage_id) {
-        Stage founded_stage;
+        Stage founded_stage = null;
         boolean is_found = false;
         Loop: for (Stage stage : this.stages) {
             if (stage.get_id() == stage_id) {
@@ -83,13 +104,14 @@ public class Karvash {
     private void update_all_statuses() {
         for (Stage stage: stages) {
             // روی ماشین های done حتما پیامیش کن و       // give_car_next_stage() را روی ان صدا کن      -1درصورت تمام شدن ارایه استیج ها
-            ArrayList<car> temp_done_cars = stage.update_status_stage();
+            ArrayList<Car> temp_done_cars = stage.update_status_stage();
 
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
                 Stage temp_stage = this.find_stage(stage_id);
-                temp_stage.add_car(temp_stage)
+                temp_stage.add_car(temp_stage);
             }
+            temp_done_cars = null;
         } 
     }
 
@@ -176,7 +198,9 @@ public class Karvash {
         Car car = new Car(this.last_car_id, values, this.time);
         this.cars.add(car);
         // ////////////////// add to the correct stage and how to handle the rest stages (talk!)
-
+        int stage_id = car.get_next_stage();
+        Stage stage_intended = this.find_stage(stage_id);
+        stage_intended.add_car(car);
         // give_car_next_stage()
 
         car.print_status();  
