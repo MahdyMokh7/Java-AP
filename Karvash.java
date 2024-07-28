@@ -20,6 +20,7 @@ public class Karvash {
     public static final String GET_STAGE_STATUS = "get_stage_status";
     public static final String GET_WORKER_STATUS = "get_worker_status";
     public static final String GET_CAR_STATUS = "get_car_status";
+    public static final String QUIT = "done";
 
 
     private Car find_car(int id) {
@@ -80,6 +81,10 @@ public class Karvash {
     }
 
     private void update_all_statuses() {
+        for (Stage stage: stages) {
+            // روی ماشین های done حتما پیامیش کن و       // give_car_next_stage() را روی ان صدا کن      -1درصورت تمام شدن ارایه استیج ها
+            stage.update_status_stage();
+        } 
         for (Car car: cars) {
             car.update_status_car();
         }
@@ -174,7 +179,10 @@ public class Karvash {
         Car car = new Car(this.last_car_id, values, this.time);
         this.cars.add(car);
         // ////////////////// add to the correct stage and how to handle the rest stages (talk!)
-        car.print_status();   // narges method check
+
+        // give_car_next_stage()
+
+        car.print_status();  
     }
 
     private void pass_time(String[] words) {
@@ -257,7 +265,7 @@ public class Karvash {
 
     private void get_request_from_user() {
         Scanner scanner = new Scanner(System.in); 
-        while (true) {
+        MAIN_LOOP: while (true) {
             String line = scanner.nextLine();
             String[] words = line.split("\\s+");  // split by whitespace
             String command = words[0];
@@ -277,6 +285,10 @@ public class Karvash {
             }
             else if (command == GET_CAR_STATUS) {
                 this.get_car_status(words);
+            }
+            else if (command == QUIT) {
+                scanner.close();
+                break MAIN_LOOP;
             }
             else {
                 System.err.println("NOT FOUND, not a correct request...");  // correct it*********** 
