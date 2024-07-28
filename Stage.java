@@ -6,9 +6,6 @@ public class Stage {
     private int price;
     private int income;  // درامد تا اون لحظه
     private Time time;
-    //private int number_of_washed_cars;
-    //private int number_of_cars_in_queue;
-    //private int number_of_cars_being_washed;   //متدش کنیم! طول سه وکتور پایین را برمیکردانیم
     private ArrayList<Car> current_cars;
     private ArrayList<Car> queue_cars;
     private ArrayList<Car> done_cars;
@@ -49,23 +46,40 @@ public class Stage {
     private void print_change_stage_to_done(int car_id) {
         System.out.println(time.getTime() + " car " + car_id + ": Stage " + id + " -> Done ");
     }
-    
+
+    private void print_change_stage_to_stage(int car_id, int prev_stage_id){
+        System.out.println(time.getTime() + " car " + car_id + ": Stage " + prev_stage_id + " -> Stage " + this.id);
+    }
+
+    private void print_change_stage_to_queue(int car_id, int prev_stage_id){
+        System.out.println(time.getTime() + " car " + car_id + ": Stage " + prev_stage_id + " -> Queue " + this.id);
+    }
+
+    private void print_change_arrival_to_stage(int car_id) {
+        System.out.println(time.getTime() + " car " + car_id + ": Arrived -> Stage " + this.id);
+    }
 
     public void add_worker(Worker worker) {  
         workers.add(worker);  
     }  
 
-    public void add_car(Car car) { // for car arrival command
+    public void add_car(Car car, int prev_stage_id, boolean from_car_arrival) {
+        // check if we have idle worker, then car add on current stage, else add on queue vector       
         for(Worker worker : workers){
             if(worker.is_worker_free()){
                 assign_idle_worker_to_car_in_queue (time.getTime(), true);
-                // PRINT KON KE MIRE TOO STAGE
+                if (from_car_arrival){
+                    print_change_arrival_to_stage(car.get_id());
+                }
+                else {
+                    print_change_stage_to_stage(car.get_id(), prev_stage_id);
+                }
+                
                 return ;
             }
         }
         queue_cars.add(car);
-        //PRINT KON KE MIRE TOO SAF
-        // check if we have idle worker, then car add on current stage, else add on queue vector       
+        print_change_stage_to_queue(prev_stage_id, prev_stage_id);   // PRINT KON KE MIRE TOO SAF
     } 
 
     public void sort_workers(){
@@ -77,14 +91,6 @@ public class Stage {
             }
         });
     }
-    
-    public void print_stage_status() {  
-          
-    } 
-
-    public void update_status_worker() {  
-        
-    } 
 
     public int get_id() {  
         return id;  
@@ -105,7 +111,7 @@ public class Stage {
         return 0; 
     }
 
-    public void assign_idle_worker_to_car_in_queue (int intermediate_time, boolean flag_from_add_car) {
+    private void assign_idle_worker_to_car_in_queue (int intermediate_time, boolean flag_from_add_car) {
         for (Car car : queue_cars){ 
             for (Worker worker : workers){
                 if(worker.is_worker_free()){
@@ -151,7 +157,6 @@ public class Stage {
 
                             new_stage_id = find_new_stage_id(car);
                             if(new_stage_id != -1){
-                                System.out.println(intermediate_time +" car "+ car.get_id()+": Stage "+ id +" -> Stage " + new_stage_id);
                                 temp_done_cars.add(car);
                             }
                             if(new_stage_id == -1){

@@ -113,7 +113,7 @@ public class Karvash {
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
                 Stage temp_stage = this.find_stage(stage_id);
-                temp_stage.add_car(car);
+                temp_stage.add_car(car, stage.get_id(), false);
             }
             temp_done_cars = null;
         } 
@@ -204,7 +204,7 @@ public class Karvash {
         // ////////////////// add to the correct stage and how to handle the rest stages (talk! (done))
         int stage_id = car.get_next_stage();
         Stage stage_intended = this.find_stage(stage_id);
-        stage_intended.add_car(car);
+        stage_intended.add_car(car, -1, true);
 
         car.print_car_status();  
     }
