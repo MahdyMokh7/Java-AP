@@ -17,7 +17,7 @@ public class Car {
         this.id = id;
         this.stage = stage;  
         this.time = time;  
-        max_id_index = 0;
+        this.max_id_index = 0;
     }  
 
     // Copy constructor
