@@ -143,7 +143,6 @@ public class Stage {
                         if(car.get_id() == worker.get_in_work_car_id()){
                             car.update_car_status("done"); 
                             worker.update_worker_status(Worker.IDLE);
-                            temp_done_cars.add(car);
 
                             new_stage_id = find_new_stage_id(car);
                             if(new_stage_id != -1){
