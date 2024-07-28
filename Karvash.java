@@ -83,17 +83,14 @@ public class Karvash {
     private void update_all_statuses() {
         for (Stage stage: stages) {
             // روی ماشین های done حتما پیامیش کن و       // give_car_next_stage() را روی ان صدا کن      -1درصورت تمام شدن ارایه استیج ها
-            stage.update_status_stage();
+            ArrayList<car> temp_done_cars = stage.update_status_stage();
+
+            for (Car car: temp_done_cars) {
+                int stage_id = car.get_next_stage();
+                Stage temp_stage = this.find_stage(stage_id);
+                temp_stage.add_car(temp_stage)
+            }
         } 
-        for (Car car: cars) {
-            car.update_status_car();
-        }
-        for (Worker worker: workers) {
-            worker.update_status_worker();
-        } 
-        for (Stage stage: stages) {
-            stage.update_status_stage();
-        }
     }
 
     private void get_car_status(String[] words) {
@@ -195,10 +192,9 @@ public class Karvash {
         int until = this.time.getTime() + time_to_pass;
         while (this.time.getTime() < until) {
 
-            this.time.increment();
-
             update_all_statuses();
 
+            this.time.increment();
         }
     }
 
@@ -234,6 +230,9 @@ public class Karvash {
                 }
                 String[] values = line.split(delimiter);
                 add_worker(values);
+            }
+            for (Stage stage: this.stages) {
+                stage.sort_workers();
             }
         } catch (IOException e) {
             e.printStackTrace();
