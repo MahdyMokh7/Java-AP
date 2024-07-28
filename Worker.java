@@ -57,8 +57,9 @@ public class Worker {
 
     public boolean is_worker_free() {  
 
-        if(this.status == IDLE){
+        if(this.status.equals(IDLE)){
             return true;
+        }
         return false;
     }  
 }
