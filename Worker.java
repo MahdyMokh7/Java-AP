@@ -19,7 +19,7 @@ public class Worker {
         this.time = time;  
     }  
 
-    // Copy constructor
+    // Copy Constructor
     public Worker(Worker other) {
         this.id = other.id;
         this.status = other.status;
@@ -30,17 +30,26 @@ public class Worker {
         this.in_work_car_id = other.in_work_car_id;
     }
 
+    public int get_id() {
+        return this.id;
+    }
+
+    public boolean is_worker_done(int intermediate_time) {
+        if (end_time_prediction == intermediate_time)
+            return true;
+        return false;
+    }
+
     public int get_time_to_finish(){
         return time_to_finish;
     }
-    public int get_end_time_prediction(){
-        return end_time_prediction;
-    }
+
     public int get_in_work_car_id(){
         return in_work_car_id;
     }
-    public void assign_end_time_prediction(int end_time){
-        this.end_time_prediction = end_time;
+
+    public void assign_end_time_prediction(int intermediate_time){
+        this.end_time_prediction = intermediate_time + time_to_finish;
     }
 
     public void print_worker_status() {  
@@ -57,8 +66,8 @@ public class Worker {
 
     public boolean is_worker_free() {  
 
-        if(this.status == IDLE){
+        if(this.status.equals(IDLE))
             return true;
         return false;
-    }  
+    }
 }

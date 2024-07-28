@@ -7,7 +7,7 @@ public class Car {
 
     private int id; 
     private String status;  
-    private ArrayList<Integer> stage;  
+    private ArrayList<Integer> stages;  
     private Time time;  
     private int max_id_index;
  
@@ -15,16 +15,16 @@ public class Car {
     public Car(int id , ArrayList<Integer> stage, Time time) {  
 
         this.id = id;
-        this.stage = stage;  
+        this.stages = stage;  
         this.time = time;  
-        max_id_index = 0;
+        this.max_id_index = 0;
     }  
 
-    // Copy constructor
+    // Copy Constructor
     public Car(Car other) {
         this.id = other.id;
         this.status = other.status;
-        this.stage = new ArrayList<>(other.stage); // Create a new ArrayList to copy stages
+        this.stages = new ArrayList<>(other.stages); // Create a new ArrayList to copy stages
         this.time = new Time(other.time); // Assuming Time has a copy constructor
         this.max_id_index = other.max_id_index; // Copy the static variable
     }
@@ -34,12 +34,11 @@ public class Car {
     } 
 
     public ArrayList<Integer> get_stage(){
-        return stage;
+        return stages;
     }
 
     public void print_car_status() {  
-        System.out.println(status); 
-        // for command 2 
+        System.out.println(String.format("%s: %d", this.status, this.stages.get(max_id_index))); 
     }
 
     public void update_car_status(String new_status) {  
@@ -48,10 +47,10 @@ public class Car {
     }
     
     public int get_next_stage() {
-        if(max_id_index >= stage.size()){
+        if(max_id_index >= stages.size()){
             return -1;
         }  
-        return stage.get(max_id_index);
+        return stages.get(max_id_index);
     }
     
     public void update_max_id_index(){

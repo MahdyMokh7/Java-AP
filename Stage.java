@@ -35,6 +35,14 @@ public class Stage {
         this.done_cars = new ArrayList<>(other.done_cars); // Shallow copy of the ArrayList
         this.workers = new ArrayList<>(other.workers); // Shallow copy of the ArrayList
     }
+
+    private void print_change_queue_to_stage(int car_id) {
+        System.out.println(time.getTime() + " car " + car_id + ": Queue " + id + " -> Stage " + id);
+    }
+
+    private void print_change_stage_to_done(int car_id) {
+        System.out.println(time.getTime() + " car " + car_id + ": Stage " + id + " -> Done ");
+    }
     
 
     public void add_worker(Worker worker) {  
@@ -90,21 +98,18 @@ public class Stage {
     }
 
     public void assign_idle_worker_to_car_in_queue (int intermediate_time, boolean flag_from_add_car) {
-        int end_time = 0;
         for (Car car : queue_cars){ 
             for (Worker worker : workers){
                 if(worker.is_worker_free()){
-                    car.update_car_status(Car.IN_SERVICE); //in queue car array_list             
+                    car.update_car_status(Car.IN_SERVICE);            
                     worker.update_worker_status(Worker.IN_WORK);
                     worker.update_in_work_car_id(car.get_id());
                     if (!flag_from_add_car) {
-                        System.out.println(intermediate_time+ " car "+ car.get_id()+": Queue "+ id +" -> Stage " + id);
+                        print_change_queue_to_stage(car.get_id());
                     }
                     current_cars.add(car);
-                    queue_cars.remove(car);  //syntax doroste? yani hamoon car ro pak mikone?
-                    end_time = intermediate_time + worker.get_time_to_finish();
-                    worker.assign_end_time_prediction(end_time);
-
+                    queue_cars.remove(car); 
+                    worker.assign_end_time_prediction(intermediate_time);
                 }
             }
         }
@@ -130,19 +135,19 @@ public class Stage {
         for (Worker worker : workers){
             for (Car car : current_cars){ 
                 if(!worker.is_worker_free()){
-                    if(intermediate_time == worker.get_end_time_prediction()){    
+                    if(worker.is_worker_done(intermediate_time)){    
 
                         if(car.get_id() == worker.get_in_work_car_id()){
-                            car.update_car_status("done"); 
+                            car.update_car_status(Car.Done); 
                             worker.update_worker_status(Worker.IDLE);
 
                             temp_done_cars.add(car);
                             new_stage_id = find_new_stage_id(car);
                             if(new_stage_id != -1){
-                                System.out.println(intermediate_time +" car "+ car.get_id()+": Stage "+ id +" -> Stage " + new_stage_id);
+                                System.out.println(intermediate_time + " car " + car.get_id() + ": Stage " + id + " -> Stage " + new_stage_id); //// queue or stage
                             }
                             if(new_stage_id == -1){
-                                System.out.println(intermediate_time +" car "+ car.get_id()+": Stage "+ id +" -> Done ");
+                                print_change_stage_to_done(car.get_id());
                             }
                             done_cars.add(car);
                             current_cars.remove(car);

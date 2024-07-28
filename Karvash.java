@@ -3,17 +3,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Vector;
-
-import javax.print.DocFlavor.STRING;
-
 
 public class Karvash {
     private ArrayList<Stage> stages;
     private ArrayList<Car> cars;
     private ArrayList<Worker> workers;
     private Time time;
-    private int last_car_id = 0;
+    private int last_car_id;
 
     public static final String PASS_TIME = "pass_time";
     public static final String CAR_ARRIVAL = "car_arrival";
@@ -22,6 +18,14 @@ public class Karvash {
     public static final String GET_CAR_STATUS = "get_car_status";
     public static final String QUIT = "done";
 
+
+    public Karvash() {
+        this.time = new Time();
+        this.stages = new ArrayList<Stage>();
+        this.cars = new ArrayList<Car>();
+        this.workers = new ArrayList<Worker>();
+        this.last_car_id = 0;
+    }
 
     // Copy constructor
     public Karvash(Karvash other) {
@@ -45,7 +49,7 @@ public class Karvash {
     }
 
     private Car find_car(int id) {
-        Car founded_car;
+        Car founded_car = null;
         boolean is_found = false;
         Loop: for (Car car : this.cars) {
             if (car.get_id() == id) {
@@ -64,7 +68,7 @@ public class Karvash {
     }
 
     private Worker find_worker(int id) {
-        Worker founded_worker;
+        Worker founded_worker = null;
         boolean is_found = false;
         Loop: for (Worker worker : this.workers) {
             if (worker.get_id() == id) {
@@ -103,13 +107,13 @@ public class Karvash {
 
     private void update_all_statuses() {
         for (Stage stage: stages) {
-            // روی ماشین های done حتما پیامیش کن و       // give_car_next_stage() را روی ان صدا کن      -1درصورت تمام شدن ارایه استیج ها
+            // We definitely have a next stage (because the -1 was handled in class Stage / temp_done_cars) 
             ArrayList<Car> temp_done_cars = stage.update_status_stage();
 
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
                 Stage temp_stage = this.find_stage(stage_id);
-                temp_stage.add_car(temp_stage);
+                temp_stage.add_car(car);
             }
             temp_done_cars = null;
         } 
@@ -122,16 +126,16 @@ public class Karvash {
             return ;
         }
 
-        int car_id; 
         try {
-            car_id = Integer.parseInt(words[1]);
+            int car_id = Integer.parseInt(words[1]);
+            Car car_intended = this.find_car(car_id);
+            if (car_intended != null)
+                car_intended.print_car_status();
+            else
+                System.err.println("car_id not found");
         } catch (Exception e) {
             System.err.println("Could not convert second arg of car status to int");
         }
-
-        Stage car_intended = this.find_stage(car_id);
-        
-        car_intended.print_car_status();
     }
 
     private void get_worker_status(String[] words) {
@@ -141,16 +145,16 @@ public class Karvash {
             return ;
         }
 
-        int stage_id; 
-        try {
-            stage_id = Integer.parseInt(words[1]);
+        try { 
+            int worker_id = Integer.parseInt(words[1]);
+            Worker stage_intended = this.find_worker(worker_id);
+            if (stage_intended != null)
+                stage_intended.print_worker_status();
+            else    
+                System.err.println("worker id not found");
         } catch (Exception e) {
             System.err.println("Could not convert second arg of stage status to int");
         }
-
-        Stage stage_intended = this.find_stage(stage_id);
-        
-        stage_intended.print_stage_status();
     }
 
     private void get_stage_status(String[] words) {
@@ -160,16 +164,16 @@ public class Karvash {
             return ;
         }
 
-        int stage_id; 
         try {
-            stage_id = Integer.parseInt(words[1]);
+            int stage_id = Integer.parseInt(words[1]);
+            Stage stage_intended = this.find_stage(stage_id);
+            if (stage_intended != null)
+                stage_intended.print_stage_status();
+            else 
+                System.err.println("stage id not found");
         } catch (Exception e) {
             System.err.println("Could not convert second arg of Stage status to int");
         }
-
-        Stage stage_intended = this.find_stage(stage_id);
-        
-        stage_intended.print_stage_status();
     }
 
     private void car_arrival(String[] words) {
@@ -180,7 +184,7 @@ public class Karvash {
         }
 
         boolean flag_command = true;
-        Vector<Integer> values = new Vector<Integer>();
+        ArrayList<Integer> values = new ArrayList<Integer>();
         for (String word : words) {
             if (flag_command) {
                 flag_command = false;
@@ -197,13 +201,12 @@ public class Karvash {
         this.last_car_id++;
         Car car = new Car(this.last_car_id, values, this.time);
         this.cars.add(car);
-        // ////////////////// add to the correct stage and how to handle the rest stages (talk!)
+        // ////////////////// add to the correct stage and how to handle the rest stages (talk! (done))
         int stage_id = car.get_next_stage();
         Stage stage_intended = this.find_stage(stage_id);
         stage_intended.add_car(car);
-        // give_car_next_stage()
 
-        car.print_status();  
+        car.print_car_status();  
     }
 
     private void pass_time(String[] words) {
@@ -226,7 +229,7 @@ public class Karvash {
         // check Stage class constructor *********************
         int id = Integer.parseInt(values[0]);
         int price = Integer.parseInt(values[1]);
-        Stage stage = new Stage(id=id, price=price, time=this.time);
+        Stage stage = new Stage(id, price, this.time);
         this.stages.add(stage);
     }
 
@@ -235,7 +238,7 @@ public class Karvash {
         int id = Integer.parseInt(values[0]);
         int stage_id = Integer.parseInt(values[1]);
         int time_to_finish = Integer.parseInt(values[2]);
-        Worker worker = new Worker(id=id, stage_id=stage_id, time_to_finish=time_to_finish, time=time);
+        Worker worker = new Worker(id, time_to_finish, stage_id, time);
         this.workers.add(worker);
         Stage stage = find_stage(stage_id);
         stage.add_worker(worker);
