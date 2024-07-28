@@ -96,6 +96,13 @@ public class Stage {
         return id;  
     }  
 
+    public void print_stage_status(){
+        System.out.println("Number of washed cars: " + done_cars.size());
+        System.out.println("Number of cars in queue: " + queue_cars.size());
+        System.out.println("Number of cars being washed: " + current_cars.size());
+        System.out.println("Income: " + income);
+    }
+
     public int find_new_stage_id(Car car){
         ArrayList<Integer> stages = car.get_stage();
         for (int i = 0; i < stages.size(); i++) {  
