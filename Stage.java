@@ -22,7 +22,13 @@ public class Stage {
         this.id = id;
         this.price = price;  
         this.time = time; 
-        this.income = 0;  
+        this.income = 0;
+
+        this.current_cars = new ArrayList<Car>();  
+        this.queue_cars = new ArrayList<Car>();  
+        this.done_cars = new ArrayList<Car>();  
+        this.workers = new ArrayList<Worker>();  
+
     }  
 
     public Stage(Stage other) {   // Copy Constructor
@@ -53,10 +59,12 @@ public class Stage {
         for(Worker worker : workers){
             if(worker.is_worker_free()){
                 assign_idle_worker_to_car_in_queue (time.getTime(), true);
+                // PRINT KON KE MIRE TOO STAGE
                 return ;
             }
         }
         queue_cars.add(car);
+        //PRINT KON KE MIRE TOO SAF
         // check if we have idle worker, then car add on current stage, else add on queue vector       
     } 
 
@@ -141,10 +149,10 @@ public class Stage {
                             car.update_car_status(Car.Done); 
                             worker.update_worker_status(Worker.IDLE);
 
-                            temp_done_cars.add(car);
                             new_stage_id = find_new_stage_id(car);
                             if(new_stage_id != -1){
-                                System.out.println(intermediate_time + " car " + car.get_id() + ": Stage " + id + " -> Stage " + new_stage_id); //// queue or stage
+                                System.out.println(intermediate_time +" car "+ car.get_id()+": Stage "+ id +" -> Stage " + new_stage_id);
+                                temp_done_cars.add(car);
                             }
                             if(new_stage_id == -1){
                                 print_change_stage_to_done(car.get_id());

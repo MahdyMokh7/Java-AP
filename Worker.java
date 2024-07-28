@@ -68,6 +68,7 @@ public class Worker {
 
         if(this.status.equals(IDLE))
             return true;
+        }
         return false;
     }
 }
