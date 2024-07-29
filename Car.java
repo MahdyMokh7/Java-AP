@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 
 public class Car { 
-    public static final String Done = "Done";
+    public static final String DONE = "Done";
     public static final String IN_SERVICE = "In Service";
     public static final String IN_LINE = "In Line";
 
-    private int id; 
+    private final int id; 
     private String status;  
     private ArrayList<Integer> stages;  
-    private Time time;  
+    private final Time time;  
     private int max_id_index;
  
     // Constructor

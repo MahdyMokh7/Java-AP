@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 public class Stage {  
-    private int id;
-    private int price;
+    private final int id;
+    private final int price;
     private int income;  // درامد تا اون لحظه
-    private Time time;
+    private final Time time;
     private ArrayList<Car> current_cars;
     private ArrayList<Car> queue_cars;
     private ArrayList<Car> done_cars;
@@ -21,10 +21,10 @@ public class Stage {
         this.time = time; 
         this.income = 0;
 
-        this.current_cars = new ArrayList<Car>();  
-        this.queue_cars = new ArrayList<Car>();  
-        this.done_cars = new ArrayList<Car>();  
-        this.workers = new ArrayList<Worker>();  
+        this.current_cars = new ArrayList<>();  
+        this.queue_cars = new ArrayList<>();  
+        this.done_cars = new ArrayList<>();  
+        this.workers = new ArrayList<>();  
 
     }  
 
@@ -166,15 +166,15 @@ public class Stage {
         int new_stage_id;
         //تخصیص کارگرT همان انتقال از صف به مرحله.
         //انتقال از مرحله به مرحله بعد
-        ArrayList<Car> temp_done_cars = new ArrayList<Car>();
+        ArrayList<Car> temp_done_cars = new ArrayList<>();
         assign_idle_worker_to_car_in_queue ( intermediate_time, false);
         for (Worker worker : workers){
             for (Car car : current_cars){ 
                 if(!worker.is_worker_free()){
-                    if(worker.is_worker_done(intermediate_time)){    
+                    if(worker.is_worker_done()){    
 
                         if(car.get_id() == worker.get_in_work_car_id()){
-                            car.update_car_status(Car.Done); 
+                            car.update_car_status(Car.DONE); 
                             worker.update_worker_status(Worker.IDLE);
 
                             new_stage_id = find_new_stage_id(car);
