@@ -78,21 +78,36 @@ public class Stage {
         workers.add(worker);  
     }  
 
+    private void assign_idle_worker_to_car_came_now (Car car) {
+        for (Worker worker : workers){
+            if(worker.is_worker_free()){
+                car.update_car_status(Car.IN_SERVICE);            
+                worker.update_worker_status(Worker.IN_WORK);
+                worker.update_in_work_car_id(car.get_id());
+                current_cars.add(car); 
+                worker.assign_end_time_prediction();
+            }
+        }
+    }
+
     public void add_car(Car car, int prev_stage_id, boolean from_car_arrival) {
         // check if we have idle worker, then car add on current stage, else add on queue vector       
         for(Worker worker : workers){
             if(worker.is_worker_free()){
-                assign_idle_worker_to_car_in_queue (time.getTime(), true);
+                System.out.println("omad if worker free");//////
                 if (from_car_arrival){
+                    assign_idle_worker_to_car_came_now (car);
                     print_change_arrival_to_stage(car.get_id());
                 }
                 else {
+                    assign_idle_worker_to_car_in_queue(from_car_arrival);
                     print_change_stage_to_stage(car.get_id(), prev_stage_id);
                 }
-                
                 return ;
             }
         }
+        System.out.println("omad else worker not free   inline");//////
+        car.update_car_status(Car.IN_LINE);
         queue_cars.add(car);
         print_change_stage_to_queue(prev_stage_id, prev_stage_id);   // PRINT KON KE MIRE TOO SAF
     } 
@@ -133,8 +148,9 @@ public class Stage {
         return 0; 
     }
 
-    private void assign_idle_worker_to_car_in_queue (int intermediate_time, boolean flag_from_add_car) {
+    private void assign_idle_worker_to_car_in_queue (boolean flag_from_add_car) {
         for (Car car : queue_cars){ 
+            System.out.println("we have queue");
             for (Worker worker : workers){
                 if(worker.is_worker_free()){
                     car.update_car_status(Car.IN_SERVICE);            
@@ -145,7 +161,7 @@ public class Stage {
                     }
                     current_cars.add(car);
                     queue_cars.remove(car); 
-                    worker.assign_end_time_prediction(intermediate_time);
+                    worker.assign_end_time_prediction();
                 }
             }
         }
@@ -162,12 +178,11 @@ public class Stage {
 
         //1:برای حالت اول تخصیص کارگر
         //2:تغیر وضعیت برای همه
-        int intermediate_time = time.getTime();
         int new_stage_id;
         //تخصیص کارگرT همان انتقال از صف به مرحله.
         //انتقال از مرحله به مرحله بعد
         ArrayList<Car> temp_done_cars = new ArrayList<>();
-        assign_idle_worker_to_car_in_queue ( intermediate_time, false);
+        assign_idle_worker_to_car_in_queue (false);
         for (Worker worker : workers){
             for (Car car : current_cars){ 
                 if(!worker.is_worker_free()){

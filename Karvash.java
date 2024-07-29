@@ -106,6 +106,7 @@ public class Karvash {
     }
 
     private void update_all_statuses() {
+        System.out.println("omad update all status");
         for (Stage stage: stages) {
             // We definitely have a next stage (because the -1 was handled in class Stage / temp_done_cars) 
             ArrayList<Car> temp_done_cars = stage.update_status_stage();
@@ -113,6 +114,7 @@ public class Karvash {
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
                 Stage temp_stage = this.find_stage(stage_id);
+                System.out.println(car.get_id());////////
                 temp_stage.add_car(car, stage.get_id(), false);
             }
            
@@ -204,9 +206,7 @@ public class Karvash {
         // ////////////////// add to the correct stage and how to handle the rest stages (talk! (done))
         int stage_id = car.get_next_stage();
         Stage stage_intended = this.find_stage(stage_id);
-        stage_intended.add_car(car, -1, true);
-
-        car.print_car_status();  
+        stage_intended.add_car(car, -1, true); 
     }
 
     private void pass_time(String[] words) {
@@ -218,6 +218,8 @@ public class Karvash {
         int time_to_pass = Integer.parseInt(words[1]);
         int until = this.time.getTime() + time_to_pass;
         while (this.time.getTime() < until) {
+
+            System.out.println("omad pass_time_func");
 
             update_all_statuses();
 

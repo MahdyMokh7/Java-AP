@@ -57,8 +57,8 @@ public class Worker {
         return in_work_car_id;
     }
 
-    public void assign_end_time_prediction(int intermediate_time){
-        this.end_time_prediction = intermediate_time + time_to_finish;
+    public void assign_end_time_prediction(){
+        this.end_time_prediction = time.getTime() + time_to_finish;
     }
 
     public void print_worker_status() {  
