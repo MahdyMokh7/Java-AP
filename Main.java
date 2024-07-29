@@ -8,6 +8,8 @@ public class Main{
         karvash.store_stages_from_csv(stages_csv_file);
         karvash.store_workers_from_csv(workers_csv_file);
 
+        
+
         karvash.run();
     }
 }
