@@ -8,7 +8,7 @@ public class Karvash {
     private ArrayList<Stage> stages;
     private ArrayList<Car> cars;
     private ArrayList<Worker> workers;
-    private Time time;
+    private final Time time;
     private int last_car_id;
 
     public static final String PASS_TIME = "pass_time";
@@ -21,9 +21,9 @@ public class Karvash {
     // Constructor
     public Karvash() {
         this.time = new Time();
-        this.stages = new ArrayList<Stage>();
-        this.cars = new ArrayList<Car>();
-        this.workers = new ArrayList<Worker>();
+        this.stages = new ArrayList<>();
+        this.cars = new ArrayList<>();
+        this.workers = new ArrayList<>();
         this.last_car_id = 0;
     }
     
@@ -115,7 +115,7 @@ public class Karvash {
                 Stage temp_stage = this.find_stage(stage_id);
                 temp_stage.add_car(car, stage.get_id(), false);
             }
-            temp_done_cars = null;
+           
         } 
     }
 
@@ -184,7 +184,7 @@ public class Karvash {
         }
 
         boolean flag_command = true;
-        ArrayList<Integer> values = new ArrayList<Integer>();
+        ArrayList<Integer> values = new ArrayList<>();
         for (String word : words) {
             if (flag_command) {
                 flag_command = false;
@@ -315,27 +315,17 @@ public class Karvash {
             String command = words[0].trim();
             
             // searching for the command to execcute
-            if (command.equals(PASS_TIME)) {
-                this.pass_time(words);
-            }
-            else if (command.equals(CAR_ARRIVAL)) {
-                this.car_arrival(words);
-            }
-            else if (command.equals(GET_STAGE_STATUS)) {
-                this.get_stage_status(words);
-            }
-            else if (command.equals(GET_WORKER_STATUS)) {
-                this.get_worker_status(words);
-            }
-            else if (command.equals(GET_CAR_STATUS)) {
-                this.get_car_status(words);
-            }
-            else if (command.equals(QUIT)) {
-                scanner.close();
-                break MAIN_LOOP;
-            }
-            else {
-                System.err.println("NOT FOUND, not a correct request... WHY!?");  // correct it*********** 
+            switch (command) {  
+                case PASS_TIME -> this.pass_time(words);
+                case CAR_ARRIVAL -> this.car_arrival(words);
+                case GET_STAGE_STATUS -> this.get_stage_status(words);
+                case GET_WORKER_STATUS -> this.get_worker_status(words);
+                case GET_CAR_STATUS -> this.get_car_status(words);
+                case QUIT -> {
+                    scanner.close();  
+                    break MAIN_LOOP; // Assuming MAIN_LOOP is a labeled block  
+                }
+                default -> System.err.println("NOT FOUND, not a correct request... WHY!?");  
             }
         }
     }

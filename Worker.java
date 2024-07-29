@@ -2,11 +2,11 @@ public class Worker {
     public static final String IDLE = "Idle";
     public static final String IN_WORK = "In Work";
 
-    private int id;  
+    private final int id;  
     private String status;  
-    private int time_to_finish;  
+    private final int time_to_finish;  
     private int stage_id;  
-    private Time time;  
+    private final Time time;  
     private int end_time_prediction;
     private int in_work_car_id;
 
@@ -43,8 +43,8 @@ public class Worker {
         return this.id;
     }
 
-    public boolean is_worker_done(int intermediate_time) {
-        if (end_time_prediction == intermediate_time)
+    public boolean is_worker_done() {
+        if (end_time_prediction == time.getTime()) //maybe being problem
             return true;
         return false;
     }
@@ -75,7 +75,7 @@ public class Worker {
 
     public boolean is_worker_free() {  
 
-        if(this.status.equals(IDLE))
+        if(this.status.equals(IDLE))  //maybe being problem
             return true;
         return false;
     }
