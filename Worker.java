@@ -30,6 +30,15 @@ public class Worker {
         this.in_work_car_id = other.in_work_car_id;
     }
 
+    public void print_worker_debug() {
+        System.out.println("Worker ID: " + id);
+        System.out.println("Status: " + status);
+        System.out.println("Time to Finish: " + time_to_finish);
+        System.out.println("Current Stage ID: " + stage_id);
+        System.out.println("In Work Car ID: " + in_work_car_id);
+        System.out.println("----------------------");
+    }
+
     public int get_id() {
         return this.id;
     }

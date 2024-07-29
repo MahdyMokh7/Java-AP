@@ -18,7 +18,7 @@ public class Karvash {
     public static final String GET_CAR_STATUS = "get_car_status";
     public static final String QUIT = "done";
 
-
+    // Constructor
     public Karvash() {
         this.time = new Time();
         this.stages = new ArrayList<Stage>();
@@ -26,8 +26,8 @@ public class Karvash {
         this.workers = new ArrayList<Worker>();
         this.last_car_id = 0;
     }
-
-    // Copy constructor
+    
+    // Copy Constructor
     public Karvash(Karvash other) {
         this.stages = new ArrayList<>(other.stages.size());
         for (Stage stage : other.stages) {
@@ -244,6 +244,24 @@ public class Karvash {
         stage.add_worker(worker);
     }
 
+    public void print_all_stages() {
+        System.out.println();
+        System.out.println("Stages Information:");
+        for (Stage stage : stages) {
+            stage.print_stage_debug();
+        }
+        System.out.println();
+    }
+
+    public void print_all_workers() {
+        System.out.println();
+        System.out.println("Workers Information:");
+        for (Worker worker : workers) {
+            worker.print_worker_debug();
+        }
+        System.out.println();
+    }
+    
     public void store_workers_from_csv(String file_path) {
         String line;
         String delimiter = ",";
@@ -294,30 +312,30 @@ public class Karvash {
         MAIN_LOOP: while (true) {
             String line = scanner.nextLine();
             String[] words = line.split("\\s+");  // split by whitespace
-            String command = words[0];
+            String command = words[0].trim();
             
             // searching for the command to execcute
-            if (command == PASS_TIME) {
+            if (command.equals(PASS_TIME)) {
                 this.pass_time(words);
             }
-            else if (command == CAR_ARRIVAL) {
+            else if (command.equals(CAR_ARRIVAL)) {
                 this.car_arrival(words);
             }
-            else if (command == GET_STAGE_STATUS) {
+            else if (command.equals(GET_STAGE_STATUS)) {
                 this.get_stage_status(words);
             }
-            else if (command == GET_WORKER_STATUS) {
+            else if (command.equals(GET_WORKER_STATUS)) {
                 this.get_worker_status(words);
             }
-            else if (command == GET_CAR_STATUS) {
+            else if (command.equals(GET_CAR_STATUS)) {
                 this.get_car_status(words);
             }
-            else if (command == QUIT) {
+            else if (command.equals(QUIT)) {
                 scanner.close();
                 break MAIN_LOOP;
             }
             else {
-                System.err.println("NOT FOUND, not a correct request...");  // correct it*********** 
+                System.err.println("NOT FOUND, not a correct request... WHY!?");  // correct it*********** 
             }
         }
     }

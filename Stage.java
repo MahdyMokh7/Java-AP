@@ -39,6 +39,21 @@ public class Stage {
         this.workers = new ArrayList<>(other.workers); // Shallow copy of the ArrayList
     }
 
+    public void print_stage_debug() {
+        System.out.println("Stage ID: " + id);
+        // Assuming Stage class has getter methods for other attributes
+        System.out.println("Price: " + price);
+        System.out.println("Income: " + income);
+        System.out.println("Number of Cars in Queue: " + queue_cars.size());
+        System.out.println("Number of Cars Being Washed: " + current_cars.size());
+        System.out.println("Number of Done Cars: " + done_cars.size());
+        System.out.println("Number of workers: " + workers.size());
+        for (Worker worker: workers) {
+            worker.print_worker_debug();
+        }
+        System.out.println("----------------------");
+    }
+
     private void print_change_queue_to_stage(int car_id) {
         System.out.println(time.getTime() + " car " + car_id + ": Queue " + id + " -> Stage " + id);
     }
