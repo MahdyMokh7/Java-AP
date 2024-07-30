@@ -109,9 +109,12 @@ public class Karvash {
         for (Stage stage: stages) {
             // We definitely have a next stage (because the -1 was handled in class Stage / temp_done_cars) 
             ArrayList<Car> temp_done_cars = stage.update_status_stage();
+            // System.out.println("temp_done_cars::: stage number--" + stage.get_id() + "--" );//
+            print_all_given_cars(temp_done_cars);///
 
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
+                System.out.println("stage_id ke dare mire: " + stage_id);///
                 Stage temp_stage = this.find_stage(stage_id);
                 temp_stage.add_car(car, stage.get_id(), false);
             }
@@ -264,6 +267,22 @@ public class Karvash {
         }
         System.out.println();
     }
+
+    public void print_all_cars() {
+        System.out.println();
+        System.out.println("Cars Information:");
+        for (Car car : cars) {
+            car.print_car_debug();
+        }
+        System.out.println();
+    }
+
+    public void print_all_given_cars(ArrayList<Car> given_cars) {
+        for (Car car : given_cars) {
+            System.out.println(car.get_id());
+        }
+        System.out.println();
+    }
     
     public void store_workers_from_csv(String file_path) {
         String line;
@@ -333,6 +352,7 @@ public class Karvash {
             }
             // print_all_stages();/////
             // print_all_workers();/////
+            // print_all_cars();
             // System.out.println("last_car_id: " + this.last_car_id);/////
             System.out.println("*****************************************************************");/////
         }

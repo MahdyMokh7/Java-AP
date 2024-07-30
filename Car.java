@@ -29,6 +29,15 @@ public class Car {
         this.max_id_index = other.max_id_index; // Copy the static variable
     }
 
+    public void print_car_debug() {
+        System.out.println("Car ID: " + id);
+        System.out.println("Status: " + status);
+        System.out.println("Stages: " + stages);
+        System.out.println("Time: " + time.getTime()); // Assuming Time has a meaningful toString method
+        System.out.println("Max ID Index: " + max_id_index);
+        System.out.println("current stage of car: " + stages.get(max_id_index));
+    }
+
     public int get_id() {  
         return id;  
     } 
@@ -38,6 +47,8 @@ public class Car {
     }
 
     public void print_car_status() {  
+        // System.out.println("id_car: " + id);///
+        // System.out.println("stage[max_id_index]/(cur stage): " + (this.stages.get(max_id_index));///
         if (!status.equals(Car.DONE)) {
             System.out.println(String.format("%s: %d", this.status, this.stages.get(max_id_index))); 
         }

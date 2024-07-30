@@ -116,7 +116,7 @@ public class Stage {
                     print_change_arrival_to_stage(car.get_id());
                 }
                 else {
-                    assign_idle_worker_to_car(from_car_arrival);
+                    assign_idle_worker_to_car_changing_stage(car);
                     print_change_stage_to_stage(car.get_id(), prev_stage_id);
                 }
                 return ;
@@ -163,16 +163,28 @@ public class Stage {
         return 0; 
     }
 
-    private void assign_idle_worker_to_car (boolean flag_from_add_car) {
+    private void assign_idle_worker_to_car_changing_stage (Car car) {
+        for (Worker worker : workers){
+            if(worker.is_worker_free()){
+                car.update_car_status(Car.IN_SERVICE);            
+                worker.update_worker_status(Worker.IN_WORK);
+                worker.update_in_work_car_id(car.get_id());
+                current_cars.add(car);
+                queue_cars.remove(car); 
+                worker.assign_end_time_prediction();
+            }
+        }
+    }
+
+    private void assign_idle_worker_to_car () {
         for (Car car : queue_cars){ 
             for (Worker worker : workers){
                 if(worker.is_worker_free()){
                     car.update_car_status(Car.IN_SERVICE);            
                     worker.update_worker_status(Worker.IN_WORK);
                     worker.update_in_work_car_id(car.get_id());
-                    if (!flag_from_add_car) {
-                        print_change_queue_to_stage(car.get_id());
-                    }
+                    print_change_queue_to_stage(car.get_id());
+
                     current_cars.add(car);
                     queue_cars.remove(car); 
                     worker.assign_end_time_prediction();
@@ -196,7 +208,7 @@ public class Stage {
         //تخصیص کارگرT همان انتقال از صف به مرحله.
         //انتقال از مرحله به مرحله بعد
         ArrayList<Car> temp_done_cars = new ArrayList<>();
-        assign_idle_worker_to_car (false);
+        assign_idle_worker_to_car ();
         for (Worker worker : workers){
 
             List<Car> carsToRemove = new ArrayList<>();
@@ -208,11 +220,15 @@ public class Stage {
 
                             new_stage_id = find_new_stage_id(car);
                             if (new_stage_id != -1) {
+                                // System.out.println("this car below came to 'if (new_stage_id != -1)' ");
+                                // car.print_car_debug();///
                                 temp_done_cars.add(car);
-                                car.update_car_status(Car.DONE);
                                 car.update_max_id_index();
                             }
-                            if (new_stage_id == -1) {
+                            else if (new_stage_id == -1) {
+                                // System.out.println("this car below came to 'if (new_stage_id == -1)' ");
+                                // car.print_car_debug();///
+                                car.update_car_status(Car.DONE);
                                 print_change_stage_to_done(car.get_id());
                             }
                             done_cars.add(car);
