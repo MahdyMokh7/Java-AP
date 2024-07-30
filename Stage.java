@@ -173,6 +173,7 @@ public class Stage {
                 queue_cars.remove(car); 
                 worker.assign_end_time_prediction();
             }
+            return;
         }
     }
 
@@ -189,6 +190,7 @@ public class Stage {
                     queue_cars.remove(car); 
                     worker.assign_end_time_prediction();
                 }
+                return;
             }
         }
     }
