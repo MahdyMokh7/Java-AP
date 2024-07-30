@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 public class Stage {  
     private final int id;
     private final int price;
@@ -42,14 +43,28 @@ public class Stage {
     public void print_stage_debug() {
         System.out.println("Stage ID: " + id);
         // Assuming Stage class has getter methods for other attributes
-        System.out.println("Price: " + price);
+        // System.out.println("Price: " + price);
         System.out.println("Income: " + income);
-        System.out.println("Number of Cars in Queue: " + queue_cars.size());
-        System.out.println("Number of Cars Being Washed: " + current_cars.size());
-        System.out.println("Number of Done Cars: " + done_cars.size());
-        System.out.println("Number of workers: " + workers.size());
+        // System.out.println("Number of Cars in Queue: " + queue_cars.size());
+        // System.out.println("Number of Cars Being Washed: " + current_cars.size());
+        // System.out.println("Number of Done Cars: " + done_cars.size());
+        // System.out.println("Number of workers: " + workers.size());
+
+        System.out.println("Done Cars IDs:");
+        for (Car car : done_cars) {
+            System.out.println("    car_id in done cars: " + car.get_id());
+        }
+        System.out.println("Queue Cars IDs:");
+        for (Car car : queue_cars) {
+            System.out.println("    car_id in queue cars: " + car.get_id());
+        }
+        System.out.println("Current Cars IDs:");
+        for (Car car : current_cars) {
+            System.out.println("    car_id in current cars: " + car.get_id());
+        }    
+        System.out.println("workers:");    
         for (Worker worker: workers) {
-            worker.print_worker_debug();
+            System.out.println("    worker_id: " + worker.get_id());
         }
         System.out.println("----------------------");
     }
@@ -86,6 +101,7 @@ public class Stage {
                 worker.update_in_work_car_id(car.get_id());
                 current_cars.add(car); 
                 worker.assign_end_time_prediction();
+                return;
             }
         }
     }
@@ -94,19 +110,18 @@ public class Stage {
         // check if we have idle worker, then car add on current stage, else add on queue vector       
         for(Worker worker : workers){
             if(worker.is_worker_free()){
-                System.out.println("omad if worker free");//////
+                System.out.println();
                 if (from_car_arrival){
                     assign_idle_worker_to_car_came_now (car);
                     print_change_arrival_to_stage(car.get_id());
                 }
                 else {
-                    assign_idle_worker_to_car_in_queue(from_car_arrival);
+                    assign_idle_worker_to_car(from_car_arrival);
                     print_change_stage_to_stage(car.get_id(), prev_stage_id);
                 }
                 return ;
             }
         }
-        System.out.println("omad else worker not free   inline");//////
         car.update_car_status(Car.IN_LINE);
         queue_cars.add(car);
         print_change_stage_to_queue(prev_stage_id, prev_stage_id);   // PRINT KON KE MIRE TOO SAF
@@ -148,9 +163,8 @@ public class Stage {
         return 0; 
     }
 
-    private void assign_idle_worker_to_car_in_queue (boolean flag_from_add_car) {
+    private void assign_idle_worker_to_car (boolean flag_from_add_car) {
         for (Car car : queue_cars){ 
-            System.out.println("we have queue");
             for (Worker worker : workers){
                 if(worker.is_worker_free()){
                     car.update_car_status(Car.IN_SERVICE);            
@@ -182,31 +196,34 @@ public class Stage {
         //تخصیص کارگرT همان انتقال از صف به مرحله.
         //انتقال از مرحله به مرحله بعد
         ArrayList<Car> temp_done_cars = new ArrayList<>();
-        assign_idle_worker_to_car_in_queue (false);
+        assign_idle_worker_to_car (false);
         for (Worker worker : workers){
-            for (Car car : current_cars){ 
-                if(!worker.is_worker_free()){
-                    if(worker.is_worker_done()){    
 
-                        if(car.get_id() == worker.get_in_work_car_id()){
-                            car.update_car_status(Car.DONE); 
+            List<Car> carsToRemove = new ArrayList<>();
+            for (Car car : current_cars) {
+                if (!worker.is_worker_free()) {
+                    if (worker.is_worker_done()) {
+                        if (car.get_id() == worker.get_in_work_car_id()) {
                             worker.update_worker_status(Worker.IDLE);
 
                             new_stage_id = find_new_stage_id(car);
-                            if(new_stage_id != -1){
+                            if (new_stage_id != -1) {
                                 temp_done_cars.add(car);
+                                car.update_car_status(Car.DONE);
+                                car.update_max_id_index();
                             }
-                            if(new_stage_id == -1){
+                            if (new_stage_id == -1) {
                                 print_change_stage_to_done(car.get_id());
                             }
                             done_cars.add(car);
-                            current_cars.remove(car);
-                            car.update_max_id_index(); 
-                            income = income + price;
-                        }                        
-                    }                
+                            carsToRemove.add(car); // Collect cars to remove
+                            income += price;
+                        }
+                    }
                 }
             }
+            // Now remove the cars after the iteration
+            current_cars.removeAll(carsToRemove);
         }
         return temp_done_cars;
     } 

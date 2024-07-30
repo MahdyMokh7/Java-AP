@@ -33,7 +33,7 @@ public class Worker {
     public void print_worker_debug() {
         System.out.println("Worker ID: " + id);
         System.out.println("Status: " + status);
-        System.out.println("Time to Finish: " + time_to_finish);
+        // System.out.println("Time to Finish: " + time_to_finish);
         System.out.println("Current Stage ID: " + stage_id);
         System.out.println("In Work Car ID: " + in_work_car_id);
         System.out.println("----------------------");
@@ -62,7 +62,12 @@ public class Worker {
     }
 
     public void print_worker_status() {  
-        System.out.println(status);  
+        if (status.equals(Worker.IDLE)) {
+            System.out.println(status); 
+        }
+        else if (status.equals(Worker.IN_WORK)) {
+            System.out.println("Working: " + in_work_car_id); 
+        } 
     }  
 
     public void update_worker_status(String new_status) {  

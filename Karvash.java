@@ -106,7 +106,6 @@ public class Karvash {
     }
 
     private void update_all_statuses() {
-        System.out.println("omad update all status");
         for (Stage stage: stages) {
             // We definitely have a next stage (because the -1 was handled in class Stage / temp_done_cars) 
             ArrayList<Car> temp_done_cars = stage.update_status_stage();
@@ -114,7 +113,6 @@ public class Karvash {
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
                 Stage temp_stage = this.find_stage(stage_id);
-                System.out.println(car.get_id());////////
                 temp_stage.add_car(car, stage.get_id(), false);
             }
            
@@ -131,11 +129,13 @@ public class Karvash {
         try {
             int car_id = Integer.parseInt(words[1]);
             Car car_intended = this.find_car(car_id);
-            if (car_intended != null)
+            if (car_intended != null) {
                 car_intended.print_car_status();
+            }
             else
                 System.err.println("car_id not found");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Could not convert second arg of car status to int");
         }
     }
@@ -155,6 +155,7 @@ public class Karvash {
             else    
                 System.err.println("worker id not found");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Could not convert second arg of stage status to int");
         }
     }
@@ -174,6 +175,7 @@ public class Karvash {
             else 
                 System.err.println("stage id not found");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Could not convert second arg of Stage status to int");
         }
     }
@@ -196,6 +198,7 @@ public class Karvash {
                 int value = Integer.parseInt(word);
                 values.add(value);
             } catch (NumberFormatException e) {
+                e.printStackTrace();
                 System.err.println("Error: Could not convert word '" + word + "' to integer in car arrival.");
                 return;
             }
@@ -219,11 +222,9 @@ public class Karvash {
         int until = this.time.getTime() + time_to_pass;
         while (this.time.getTime() < until) {
 
-            System.out.println("omad pass_time_func");
+            this.time.increment();
 
             update_all_statuses();
-
-            this.time.increment();
         }
     }
 
@@ -316,6 +317,7 @@ public class Karvash {
             String[] words = line.split("\\s+");  // split by whitespace
             String command = words[0].trim();
             
+            System.out.println("*****************************************************************");/////
             // searching for the command to execcute
             switch (command) {  
                 case PASS_TIME -> this.pass_time(words);
@@ -329,6 +331,10 @@ public class Karvash {
                 }
                 default -> System.err.println("NOT FOUND, not a correct request... WHY!?");  
             }
+            // print_all_stages();/////
+            // print_all_workers();/////
+            // System.out.println("last_car_id: " + this.last_car_id);/////
+            System.out.println("*****************************************************************");/////
         }
     }
 

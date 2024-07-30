@@ -38,7 +38,12 @@ public class Car {
     }
 
     public void print_car_status() {  
-        System.out.println(String.format("%s: %d", this.status, this.stages.get(max_id_index))); 
+        if (!status.equals(Car.DONE)) {
+            System.out.println(String.format("%s: %d", this.status, this.stages.get(max_id_index))); 
+        }
+        else {
+            System.out.println(status);            
+        }
     }
 
     public void update_car_status(String new_status) {  
