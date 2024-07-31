@@ -10,3 +10,4 @@ get_worker_status 1
 get_worker_status 2
 get_worker_status 3
 get_worker_status 4
+quit

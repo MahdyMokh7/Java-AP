@@ -25,3 +25,4 @@ get_worker_status 3
 get_worker_status 4
 get_stage_status 1
 get_stage_status 2
+quit

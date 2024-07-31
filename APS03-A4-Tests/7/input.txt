@@ -9,3 +9,4 @@ get_car_status 2
 pass_time 2
 get_car_status 1
 get_car_status 2
+quit

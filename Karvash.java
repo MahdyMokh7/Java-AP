@@ -16,7 +16,7 @@ public class Karvash {
     public static final String GET_STAGE_STATUS = "get_stage_status";
     public static final String GET_WORKER_STATUS = "get_worker_status";
     public static final String GET_CAR_STATUS = "get_car_status";
-    public static final String QUIT = "done";
+    public static final String QUIT = "quit";
 
     // Constructor
     public Karvash() {
@@ -110,11 +110,10 @@ public class Karvash {
             // We definitely have a next stage (because the -1 was handled in class Stage / temp_done_cars) 
             ArrayList<Car> temp_done_cars = stage.update_status_stage();
             // System.out.println("temp_done_cars::: stage number--" + stage.get_id() + "--" );//
-            print_all_given_cars(temp_done_cars);///
+            // print_all_given_cars(temp_done_cars);///
 
             for (Car car: temp_done_cars) {
                 int stage_id = car.get_next_stage();
-                System.out.println("stage_id ke dare mire: " + stage_id);///
                 Stage temp_stage = this.find_stage(stage_id);
                 temp_stage.add_car(car, stage.get_id(), false);
             }
@@ -336,7 +335,7 @@ public class Karvash {
             String[] words = line.split("\\s+");  // split by whitespace
             String command = words[0].trim();
             
-            System.out.println("*****************************************************************");/////
+            // System.out.println("*****************************************************************");/////
             // searching for the command to execcute
             switch (command) {  
                 case PASS_TIME -> this.pass_time(words);
@@ -354,18 +353,18 @@ public class Karvash {
             // print_all_workers();/////
             // print_all_cars();
             // System.out.println("last_car_id: " + this.last_car_id);/////
-            System.out.println("*****************************************************************");/////
+            // System.out.println("*****************************************************************");/////
         }
     }
 
     public void run() {
-        System.out.println("Start of Karvash");
-        System.out.println("----------------------");
+    //     System.out.println("Start of Karvash");
+    //     System.out.println("----------------------");
 
         get_request_from_user();
 
-        System.out.println("----------------------");
-        System.out.println("End of Karvash");
+        // System.out.println("----------------------");
+        // System.out.println("End of Karvash");
         System.gc();
     }
 }

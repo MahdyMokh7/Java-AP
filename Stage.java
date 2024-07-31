@@ -70,23 +70,23 @@ public class Stage {
     }
 
     private void print_change_queue_to_stage(int car_id) {
-        System.out.println(time.getTime() + " car " + car_id + ": Queue " + id + " -> Stage " + id);
+        System.out.println(time.getTime() + " Car " + car_id + ": Queue " + id + " -> Stage " + id);
     }
 
     private void print_change_stage_to_done(int car_id) {
-        System.out.println(time.getTime() + " car " + car_id + ": Stage " + id + " -> Done ");
+        System.out.println(time.getTime() + " Car " + car_id + ": Stage " + id + " -> Done ");
     }
 
     private void print_change_stage_to_stage(int car_id, int prev_stage_id){
-        System.out.println(time.getTime() + " car " + car_id + ": Stage " + prev_stage_id + " -> Stage " + this.id);
+        System.out.println(time.getTime() + " Car " + car_id + ": Stage " + prev_stage_id + " -> Stage " + this.id);
     }
 
     private void print_change_stage_to_queue(int car_id, int prev_stage_id){
-        System.out.println(time.getTime() + " car " + car_id + ": Stage " + prev_stage_id + " -> Queue " + this.id);
+        System.out.println(time.getTime() + " Car " + car_id + ": Stage " + prev_stage_id + " -> Queue " + this.id);
     }
 
     private void print_change_arrival_to_stage(int car_id) {
-        System.out.println(time.getTime() + " car " + car_id + ": Arrived -> Stage " + this.id);
+        System.out.println(time.getTime() + " Car " + car_id + ": Arrived -> Stage " + this.id);
     }
 
     public void add_worker(Worker worker) {  
@@ -110,7 +110,6 @@ public class Stage {
         // check if we have idle worker, then car add on current stage, else add on queue vector       
         for(Worker worker : workers){
             if(worker.is_worker_free()){
-                System.out.println();
                 if (from_car_arrival){
                     assign_idle_worker_to_car_came_now (car);
                     print_change_arrival_to_stage(car.get_id());
@@ -172,6 +171,7 @@ public class Stage {
                 current_cars.add(car);
                 queue_cars.remove(car); 
                 worker.assign_end_time_prediction();
+                return;
             }
         }
     }
@@ -188,6 +188,7 @@ public class Stage {
                     current_cars.add(car);
                     queue_cars.remove(car); 
                     worker.assign_end_time_prediction();
+                    return;
                 }
             }
         }
