@@ -188,7 +188,7 @@ public class Stage {
                     current_cars.add(car);
                     queue_cars.remove(car); 
                     worker.assign_end_time_prediction();
-                    return;
+                    break;
                 }
             }
         }
