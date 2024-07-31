@@ -47,6 +47,8 @@ if __name__ == '__main__':
         output_file_path = os.path.join(folder_path, "output_me.txt")
         original_output_file_path = os.path.join(folder_path, "output.txt")
         differ_file_path = os.path.join(folder_path, "differ.txt")
+        stages_path = os.path.join(folder_path, "stages.csv")
+        workers_path = os.path.join(folder_path, "workers.csv")
 
         # Delete previous compiled Java files in the current directory
         for file in os.listdir('.'):
@@ -67,7 +69,7 @@ if __name__ == '__main__':
                 input_file.write("quit")
 
             # Prepare the command to run the Java program
-            java_command = ["java", "Main", "Stages.csv", "Workers.csv"]
+            java_command = ["java", "Main", stages_path, workers_path]
 
             # Run the Java program with input redirection and output redirection
             with open(input_file_path, 'r') as input_file, open(output_file_path, 'w') as output_file:
